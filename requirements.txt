@@ -1,10 +1,13 @@
+annotated-types @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/annotated-types_1729043709318/work
+anyio @ file:///C:/b/abs_5c8w79vk0u/croot/anyio_1745334672105/work
 asttokens @ file:///C:/b/abs_9662ywy9fp/croot/asttokens_1743630464377/work
+asyncio-atexit==1.0.1
 attrs @ file:///C:/b/abs_89hmquz5ga/croot/attrs_1734533130810/work
 beautifulsoup4 @ file:///C:/b/abs_3fjnplvbrh/croot/beautifulsoup4-split_1752599001105/work
 Bottleneck @ file:///C:/b/abs_816hr2khp1/croot/bottleneck_1731058648110/work
 Brotli @ file:///C:/b/abs_c415aux9ra/croot/brotli-split_1736182803933/work
 brotlicffi @ file:///C:/b/abs_f4lixvzmxt/croot/brotlicffi_1736183286104/work
-certifi @ file:///C:/b/abs_67mh6i36ci/croot/certifi_1752653721535/work/certifi
+certifi @ file:///C:/b/abs_2bz30lzohz/croot/certifi_1754570654565/work/certifi
 cffi @ file:///C:/b/abs_29_b57if3f/croot/cffi_1736184144340/work
 charset-normalizer @ file:///croot/charset-normalizer_1721748349566/work
 colorama @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/colorama_1729036581634/work
@@ -13,8 +16,12 @@ contourpy @ file:///C:/b/abs_f2u2o_8s9g/croot/contourpy_1732540071787/work
 cycler @ file:///tmp/build/80754af9/cycler_1637851556182/work
 debugpy @ file:///C:/b/abs_bf9oo2vhxp/croot/debugpy_1736269476451/work
 decorator @ file:///opt/conda/conda-bld/decorator_1643638310831/work
+Deprecated==1.2.18
+emoji==2.14.1
 executing @ file:///opt/conda/conda-bld/executing_1646925071911/work
+fastapi @ file:///C:/miniconda3/conda-bld/fastapi_1757101276440/work
 fonttools @ file:///C:/b/abs_4crkswws2h/croot/fonttools_1737040078745/work
+grapheme==0.6.0
 h11 @ file:///C:/b/abs_224rqu7kel/croot/h11_1748442031959/work
 html5lib @ file:///Users/ktietz/demo/mc3/conda-bld/html5lib_1629144453894/work
 idna @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/idna_1729038997316/work
@@ -32,6 +39,7 @@ matplotlib-inline @ file:///C:/Users/dev-admin/buildout/croot/matplotlib-inline_
 mkl-service==2.4.0
 mkl_fft @ file:///C:/Users/dev-admin/mkl/mkl_fft_1730824198951/work
 mkl_random @ file:///C:/Users/dev-admin/mkl/mkl_random_1730824302834/work
+mss==10.1.0
 nest_asyncio @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/nest-asyncio_1729042999160/work
 numexpr @ file:///C:/b/abs_4e0h6i5ip2/croot/numexpr_1752521729801/work
 numpy @ file:///C:/b/abs_958d_utj4g/croot/numpy_and_numpy_base_1750883811830/work/dist/numpy-2.3.1-cp313-cp313-win_amd64.whl#sha256=a5427a7212475edd8f7de263059ae980c79c778992c6f3404e31619b5a37c706
@@ -45,6 +53,8 @@ prompt_toolkit @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/p
 psutil @ file:///C:/b/abs_b5gv3mn55h/croot/psutil_1736371546320/work
 pure-eval @ file:///opt/conda/conda-bld/pure_eval_1646925070566/work
 pycparser @ file:///tmp/build/80754af9/pycparser_1636541352034/work
+pydantic @ file:///C:/b/abs_d1rp6fqxgk/croot/pydantic_1750768285689/work
+pydantic_core @ file:///C:/b/abs_d0xs0z3erk/croot/pydantic-core_1750754747982/work
 Pygments @ file:///C:/b/abs_e4bg5vh5j_/croot/pygments_1744667628203/work
 pyparsing @ file:///C:/Users/dev-admin/buildout/croot/pyparsing_1735861809022/work
 PyQt6==6.7.1
@@ -67,18 +77,24 @@ sniffio @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/sniffio_
 sortedcontainers @ file:///tmp/build/80754af9/sortedcontainers_1623949099177/work
 soupsieve @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/soupsieve_1729039543636/work
 stack-data @ file:///opt/conda/conda-bld/stack_data_1646927590127/work
+starlette @ file:///C:/miniconda3/conda-bld/starlette-recipe_1756910697974/work
 threadpoolctl @ file:///C:/b/abs_3904pspv77/croot/threadpoolctl_1731006105881/work
 tornado @ file:///C:/b/abs_7dzpc171lf/croot/tornado_1748956950306/work
 traitlets @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/traitlets_1729038154689/work
 trio @ file:///C:/b/abs_d95kn2xi4n/croot/trio_1747182479395/work
 trio-websocket @ file:///C:/b/abs_45nc1akikg/croot/trio-websocket_1741025743389/work
+typing-inspection @ file:///C:/b/abs_261c5jt6kx/croot/typing-inspection_1746023491500/work
 typing_extensions @ file:///C:/b/abs_0ffjxtihug/croot/typing_extensions_1734714875646/work
 tzdata @ file:///croot/python-tzdata_1746123641790/work
+undetected-chromedriver==3.5.4
 urllib3 @ file:///C:/b/abs_393g1ayee_/croot/urllib3_1750775481226/work
 wcwidth @ file:///C:/b/abs_0c8p4c33bp/croot/wcwidth_1750352902378/work
 webdriver-manager==4.0.2
 webencodings @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/webencodings_1729039571130/work
 websocket-client @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/websocket-client_1729041881346/work
+websockets==15.0.1
 wheel==0.45.1
 win_inet_pton @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/win_inet_pton_1729038644686/work
+wrapt==1.17.3
 wsproto @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/wsproto_1729057369843/work
+zendriver==0.14.2

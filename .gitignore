@@ -4,3 +4,8 @@ __pycache__/
 data_explore.ipynb
 car_data_autovit.csv
 car_data_mobilede.csv
+scraped/
+app/
+chromedriver.exe
+static/
+templates/

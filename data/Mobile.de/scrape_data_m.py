@@ -12,27 +12,34 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 import re
 from selenium.common.exceptions import NoSuchElementException
+import zendriver as zd
+import os
+from datetime import datetime
+
+timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+raw_file_path = os.path.join("data", "Mobile.de", "scraped", "raw", f"car_data_mobilede_raw_{timestamp}.csv")
+final_file_path = os.path.join("data", "Mobile.de", "scraped", "final", f"car_data_mobilede_final_{timestamp}.csv")
 
 options = Options()
-#options.add_argument("--headless")  # run Chrome in background
+# options.add_argument("--headless")
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
 
 service = Service(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service, options=options)
 
-root_url = "https://www.autovit.ro"
-base_url = f"{root_url}/autoturisme"
-
+root_url = "https://www.mobile.de/?lang=en"
+base_url = "https://suchen.mobile.de/fahrzeuge/search.html?dam=false&isSearchRequest=true&ref=quickSearch&s=Car&vc=Car&lang=en"
+placeholder_url = "https://suchen.mobile.de/fahrzeuge/search.html?dam=false&isSearchRequest=true&pageNumber=1&ref=srpNextPage&refId=b459a424-b9c7-2cbe-a77a-0256f462311b&s=Car&vc=Car"
 
 def scrape_data(n):
     results = []
     for i in range(1, n):
         try:
-            url = f"{base_url}?page={i}"
+            url = f"{base_url}&pageNumber={i}"
             driver.get(url)
             wait = WebDriverWait(driver, 10)
-
+            print(f"Scraping page {i}: {url}")
             try:
                 consent_btn = wait.until(
                     EC.element_to_be_clickable((By.XPATH, "//button[contains(., 'Accept')]"))
@@ -43,21 +50,41 @@ def scrape_data(n):
                 print("No consent popup found")
             soup = BeautifulSoup(driver.page_source, "html.parser")
 
-            listings = soup.find("div", class_="ooa-r53y0q e1612gp011")
+            listings = soup.find("div", class_="leHcX")
+            print("Listings object found:", listings is not None)
             if not listings:
                 break
+            
+            cars = listings.select("article")
+            print("Number of cars found:", len(cars))
 
-            car_cards = listings.find_all("article")
-
-            for listing in car_cards:
+            wait.until(EC.presence_of_element_located((By.CLASS_NAME, "leHcX")))
+            for car in cars:
                 try:
-                    data = {
-                        "title": listing.find("h2", class_="etydmma0 ooa-iasyan").text.strip(),
-                        "hp_displacement_desc": listing.find("p", class_="e1afgq2j0 ooa-pr7t48").text.strip(),
-                        "price_str": listing.find("h3", class_="efzkujb1 ooa-1qiba3v").text.strip(),
-                        "mileage_fuel_year": listing.find_all("dd", class_="ooa-1cl0af6 e1gy25k12")
-                    }
-                    results.append(data)
+                    title_tag = car.select_one("span.eO87w")
+                    price_tag = car.select_one("span.GYhxV")
+                    info_tag = car.select_one("div.HaBLt")
+
+                    if not title_tag:
+                        print("Title not found")
+                    if not price_tag:
+                        print("Price not found")
+                    if not info_tag:
+                        print("Info block not found")
+
+                    if title_tag and price_tag and info_tag:
+                        data = {
+                            "title": title_tag.text.strip(),
+                            "price": price_tag.text.strip(),
+                            "year_mileage_power_fuel": "".join(
+                                 t for t in info_tag.strings if t.parent.name != "strong"
+                            ).strip()
+                        }
+                        print("Added:", data)
+                        results.append(data)
+                    else:
+                        print("Skipping due to missing data")
+
                 except AttributeError:
                     continue
         except NoSuchElementException as te:
@@ -70,11 +97,12 @@ def scrape_data(n):
             print(f"Unknown error on page {i}: {e}")
             break
         time.sleep(2)
+
     return results
 
-def clean_data(raw_data):
+def clean_data(raw_input):
     cleaned = []
-    for item in raw_data:
+    for item in raw_input:
         try:
             title = item["title"]
 
@@ -103,34 +131,25 @@ def clean_data(raw_data):
             model_match = re.search(rf"\b({model_pattern})\b", remaining_title)
             listing_model = model_match.group(1) if model_match else None
 
-            # mileage, fuel, year
-            if len(item["mileage_fuel_year"]) == 3:
-                mileage_str = item["mileage_fuel_year"][0].text.strip()
-                fuel = item["mileage_fuel_year"][1].text.strip()
-                year = int(item["mileage_fuel_year"][2].text.strip())
-                mileage = int(mileage_str.split(" km")[0].replace(" ", ""))
-            else:
-                mileage, fuel, year = None, None, None
+            if item["year_mileage_power_fuel"].startswith("• "):
+                item["year_mileage_power_fuel"] = item["year_mileage_power_fuel"][2:]
 
-            # price
-            price = float(item["price_str"].replace(" ", "").replace(",", "."))
+            item["year_mileage_power_fuel"] = item["year_mileage_power_fuel"].replace("\xa0", " ")
 
-            # engine details
-            details = [d.strip() for d in item["hp_displacement_desc"].split("•")]
-            if len(details) == 3:
-                displacement_str, power_str, desc = details
-                displacement = int(displacement_str.split(" cm3")[0])
-                power = int(power_str.split(" CP")[0])
-            else:
-                displacement, power, desc = None, None, None
-
+            try:
+                date, mileage_str, power_str, fuel_str = [data.strip() for data in item["year_mileage_power_fuel"].split(" • ") if data.strip()]
+                year = int(date.split("/")[1].replace(" ", ""))
+                mileage = int(mileage_str.split(" km")[0].replace(",", "").replace(" ", ""))
+                power = int(power_str.split("(")[1].split(" hp")[0].replace(" ", ""))
+                fuel = fuel_str.replace(" ", "")
+            except ValueError:
+                year, mileage, power, fuel = None, None, None, None
+            price = float(item["price"].replace(" ", "").replace(",", "").replace("€", "").replace("¹", "").strip())
             cleaned.append({
                 "brand": listing_brand,
                 "model": listing_model,
                 "full_title": title,
-                "engine_displacement_cm3": displacement,
                 "power_hp": power,
-                "ad_description": desc,
                 "price_eur": price,
                 "mileage_km": mileage,
                 "fuel_type": fuel,
@@ -140,13 +159,10 @@ def clean_data(raw_data):
             print(f"Error cleaning item {item}: {e}")
             continue
     return cleaned
-df = pd.DataFrame(clean_data(scrape_data(600)))
-df.to_csv(r"Autovit\car_data_autovit.csv")
 
-driver.quit()
+scraped = clean_data(scrape_data(300))
 
-print(df.head())
-print(df.dtypes)
-print(df.isnull().sum())
-print(df.describe())
-print(df.shape)
+print(scraped)
+
+df = pd.DataFrame(scraped)
+df.to_csv(r"data\Mobile.de\car_data_mobilede.csv")

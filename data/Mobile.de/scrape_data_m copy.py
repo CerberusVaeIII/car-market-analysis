@@ -12,10 +12,16 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 import re
 from selenium.common.exceptions import NoSuchElementException
+import zendriver as zd
+import os
+from datetime import datetime
 
+timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+raw_file_path = os.path.join("data", "Mobile.de", "scraped", "raw", f"car_data_mobilede_raw_{timestamp}.csv")
+final_file_path = os.path.join("data", "Mobile.de", "scraped", "final", f"car_data_mobilede_final_{timestamp}.csv")
 
 options = Options()
-options.add_argument("--headless")
+# options.add_argument("--headless")
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
 
@@ -154,9 +160,9 @@ def clean_data(raw_input):
             continue
     return cleaned
 
-scraped = clean_data(scrape_data(3))
+scraped = clean_data(scrape_data(300))
 
 print(scraped)
 
 df = pd.DataFrame(scraped)
-df.to_csv(r"Mobile.de\car_data_mobilede.csv")
+df.to_csv(r"data\Mobile.de\car_data_mobilede.csv")
